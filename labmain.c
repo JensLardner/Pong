@@ -6,7 +6,7 @@
 
 
 /* Below functions are external and found in other files. */
-
+#include "bitmaps.h"
 #include <stdbool.h>
 
 #define MAX_SCORE 9
@@ -63,7 +63,6 @@ void handle_interrupt(unsigned cause)
   volatile unsigned short* Timeout_Status = (volatile unsigned short*) 0x04000020;
   *Timeout_Status = 0;
   nextFrame = 1;
- 
 }
 
 /* Add your code here for initializing interrupts. */
@@ -149,6 +148,17 @@ int get_btn(){
   return *address & 0x1;
   }
 
+void drawCharacter(int x, int y, char character, char color ){
+ for(int i = 0; i < 8; i++){
+        char pixels = font8x8_basic[(int)character][i];
+        for(int j = 0; j<8; j++){
+           if (pixels & (1 << j)) {
+           frame[(y + i) * SCREEN_WIDTH + x + j] = color;
+           }
+        }
+      }
+
+}
 
 void drawRectangle(int x, int y, int width, int height, char color){
       for(int i = y; i < y + height; i++){
@@ -171,7 +181,7 @@ void draw(paddle* paddle1, paddle* paddle2, ball* ball1){
     drawRectangle(ball1->x, ball1->y, ball1->width, ball1->height, 0xFF);
 
     *(DMA_Control+1) = (unsigned int) (frame);
-    *(DMA_Control+0) = 0;
+    *(DMA_Control+0) = 0; 
 
 }
 
@@ -247,24 +257,34 @@ void draw(paddle* paddle1, paddle* paddle2, ball* ball1){
   }
 
   void drawMenu(int activeMenuItem){
-    //int activeMenuItem = 0;
-    int menuTextHeight = 8;
+
+    int characterHeight = 8;
+    int characterWidth = 8;
     int numberOfMenuItems = 3;
-    char selectedItemColor = 0xFF;
-    //char* menuItems[3] = {"PLAYER VS CPU", "PLAYER VS PLAYER", "Exit"};
+    char selectedItemColor = 0xE0;
+    //char* menuItems[] = {"PLAYER VS CPU", "PLAYER VS PLAYER", "EXIT"};
+    
+    for(int j = 0; j<16; j++)
+      drawCharacter(10 + j*characterWidth, 0, "PLAYER VS PLAYER"[j], 0xFF);
+    
+
     for(int i = 0; i<numberOfMenuItems; i++){
       if(i == activeMenuItem)
-        drawRectangle(0, i*menuTextHeight, SCREEN_WIDTH, menuTextHeight, selectedItemColor);
+        drawRectangle(0, i*characterHeight, SCREEN_WIDTH, characterHeight, selectedItemColor);
       else
-        drawRectangle(0, i*menuTextHeight, SCREEN_WIDTH, menuTextHeight, 0x00);
+        drawRectangle(0, i*characterHeight, SCREEN_WIDTH, characterHeight, 0x00);
     }
+
     
+
+
+    *(DMA_Control+1) = (unsigned int) (frame);
+    *(DMA_Control+0) = 0; 
   }
 
 
   void runGameLoop(){
-    SCREEN_WIDTH = *(DMA_Control + 2) & 0xFFFF; 
-    SCREEN_HEIGHT = (*(DMA_Control + 2) >> 16) & 0xFFFF;
+  
 
     paddle paddle1;
     paddle1.width = SCREEN_WIDTH/PADDLE_RELATIVE_WIDTH;
@@ -317,7 +337,7 @@ void draw(paddle* paddle1, paddle* paddle2, ball* ball1){
         paddleMovement(&paddle1);
 
         paddleMovement(&paddle2);
-
+        
         ballMovement(&ball, &score1, &score2);
 
         paddleCollision(&paddle1, &ball);
@@ -335,6 +355,8 @@ void draw(paddle* paddle1, paddle* paddle2, ball* ball1){
  int main ( void ) {
 
     labinit();
+    SCREEN_WIDTH = *(DMA_Control + 2) & 0xFFFF; 
+    SCREEN_HEIGHT = (*(DMA_Control + 2) >> 16) & 0xFFFF;
 
     int activeMenuItem = 0;
     while(inMenu){
