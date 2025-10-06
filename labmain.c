@@ -256,6 +256,18 @@ void draw(paddle* paddle1, paddle* paddle2, ball* ball1){
    }
   }
 
+clearBackBufferMenu( ){
+  
+    for(int i = 0; i<numberOfMenuItems; i++){
+      if(i == activeMenuItem)
+        drawRectangle(0, i*characterHeight, SCREEN_WIDTH, characterHeight, selectedItemColor);
+      else
+        drawRectangle(0, i*characterHeight, SCREEN_WIDTH, characterHeight, 0x00);
+    }
+
+  
+}
+  
   void drawMenu(int activeMenuItem){
 
     int characterHeight = 8;
@@ -274,9 +286,6 @@ void draw(paddle* paddle1, paddle* paddle2, ball* ball1){
       else
         drawRectangle(0, i*characterHeight, SCREEN_WIDTH, characterHeight, 0x00);
     }
-
-    
-
 
     *(DMA_Control+1) = (unsigned int) (frame);
     *(DMA_Control+0) = 0; 
