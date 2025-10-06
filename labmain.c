@@ -156,11 +156,11 @@ int get_btn(){
   }
 
 void drawCharacter(int x, int y, char character, char color ){
- for(int i = 0; i < 8; i++){
-        char pixels = font8x8_basic[(int)character][i];
-        for(int j = 0; j<8; j++){
-           if (pixels & (1 << j)) {
-           frame[(y + i) * SCREEN_WIDTH + x + j] = color;
+ for(int bitmapRow = 0; bitmapRow < 8; bitmapRow++){
+        char pixels = font8x8_basic[(int)character][bitmapRow];
+        for(int bitmapColumn = 0; bitmapColumn<8; bitmapColumn++){
+           if (pixels & (0x1 << bitmapColumn)) {
+           frame[(y + bitmapRow) * SCREEN_WIDTH + x + bitmapColumn] = color;
            }
         }
       }
@@ -281,8 +281,6 @@ void drawMovingElements(Paddle* paddle1, Paddle* paddle2, Ball* ball){
     && paddle1->x < (ball->x + ball->width) 
     && ball->x < (paddle1->x + paddle1->width)){
       ball->movX = -ball->movX;
-
-  
 
       if(ball->x <SCREEN_WIDTH/2)
         ball->x += ball->width;
