@@ -8,6 +8,7 @@
 /* Below functions are external and found in other files. */
 #include "bitmaps.h"
 #include <stdbool.h>
+#include <string.h>
 
 #define MAX_SCORE 9
 
@@ -17,6 +18,9 @@
 #define PADDLE_MOVEMENT_SPEED 1
 
 #define BALL_MOVEMENT_SPEED 1
+
+#define CHARACTER_WIDTH 8
+#define CHARACTER_HEIGHT 8
 
 extern void print(const char*);
 extern void print_dec(unsigned int);
@@ -35,9 +39,14 @@ volatile int* DMA_Control = (volatile int *) 0x4000100;
 
 unsigned short SCREEN_WIDTH;
 unsigned short SCREEN_HEIGHT;
+
 bool running = true;
 bool inMenu = true;
+enum {MENU, PVP, PVC} gameState;
+
 volatile char nextFrame = 1;
+int score1;
+int score2;
 
 typedef struct{
   short x;
@@ -85,10 +94,8 @@ void labinit(void)
 }
 
 void set_leds(int led_mask){
-
   volatile int* p = (volatile int*)0x04000000;
   *p = led_mask & 0x3FF;
-  
 }
 
 void set_display(int display_number, int value){
@@ -172,16 +179,28 @@ void clearBackBuffer(paddle* paddle1, paddle* paddle2, ball* ball1){
     drawRectangle(paddle1->x, paddle1->y, paddle1->width, paddle1->height, 0x00);
     drawRectangle(paddle2->x, paddle2->y, paddle2->width, paddle2->height, 0x00);
     drawRectangle(ball1->x, ball1->y, ball1->width, ball1->height, 0x00);
+
+    drawCharacter(SCREEN_WIDTH/2 - CHARACTER_WIDTH, 10, score1 + '0', 0x00);
+    drawCharacter(SCREEN_WIDTH/2 + CHARACTER_WIDTH, 10, score2 + '0', 0x00);
+
 }
 
-void draw(paddle* paddle1, paddle* paddle2, ball* ball1){
+void frameBuffer(){
+    *(DMA_Control+1) = (unsigned int) (frame);
+    *(DMA_Control+0) = 0; 
+}
+
+void drawMovingElements(paddle* paddle1, paddle* paddle2, ball* ball1){
 
     drawRectangle(paddle1->x, paddle1->y, paddle1->width, paddle1->height, 0xFF);
     drawRectangle(paddle2->x, paddle2->y, paddle2->width, paddle2->height, 0xFF);
     drawRectangle(ball1->x, ball1->y, ball1->width, ball1->height, 0xFF);
 
-    *(DMA_Control+1) = (unsigned int) (frame);
-    *(DMA_Control+0) = 0; 
+    drawCharacter(SCREEN_WIDTH/2 - CHARACTER_WIDTH, 10, score1 + '0', 0xFF);
+    drawCharacter(SCREEN_WIDTH/2, 10,':', 0xFF);
+    drawCharacter(SCREEN_WIDTH/2 + CHARACTER_WIDTH, 10, score2 + '0', 0xFF);
+
+    frameBuffer();
 
 }
 
@@ -246,52 +265,76 @@ void draw(paddle* paddle1, paddle* paddle2, ball* ball1){
 
   }
 
+  
   void paddleCollision(paddle* paddle1, ball* ball1){
    if( paddle1->y < (ball1->y + ball1->height)
     && ball1->y < (paddle1->y + paddle1->height)
     && paddle1->x < (ball1->x + ball1->width) 
     && ball1->x < (paddle1->x + paddle1->width)){
       ball1->movX = -ball1->movX;
-      ball1->x += ball1->movX;
+
+  
+
+      if(ball1->x <SCREEN_WIDTH/2)
+        ball1->x += ball1->width;
+      else
+        ball1->x -= ball1->width;
    }
   }
 
-clearBackBufferMenu( ){
-  
-    for(int i = 0; i<numberOfMenuItems; i++){
-      if(i == activeMenuItem)
-        drawRectangle(0, i*characterHeight, SCREEN_WIDTH, characterHeight, selectedItemColor);
-      else
-        drawRectangle(0, i*characterHeight, SCREEN_WIDTH, characterHeight, 0x00);
+/**
+ * Not sure if this is needed.
+ */
+void clearBackBufferMenu(){
+ for(int i = 0; i<SCREEN_HEIGHT*SCREEN_HEIGHT; i++){
+        frame[i] = 0x00;
     }
+}
 
-  
+
+
+void drawMenuItem(char* item, int position){
+    int i = 0;
+    while(item[i] != 0){
+      drawCharacter(10 + i*CHARACTER_WIDTH, CHARACTER_HEIGHT*position, item[i], 0xFF);
+      i++;
+    }
 }
   
-  void drawMenu(int activeMenuItem){
-
-    int characterHeight = 8;
-    int characterWidth = 8;
+/**
+ * Draws the menu on the screen
+ */
+void drawMenu(int activeMenuItem){
+    //clearBackBufferMenu();
+    //int characterHeight = 8;
+    //int characterWidth = 8;
     int numberOfMenuItems = 3;
     char selectedItemColor = 0xE0;
-    //char* menuItems[] = {"PLAYER VS CPU", "PLAYER VS PLAYER", "EXIT"};
     
-    for(int j = 0; j<16; j++)
-      drawCharacter(10 + j*characterWidth, 0, "PLAYER VS PLAYER"[j], 0xFF);
-    
-
+  
     for(int i = 0; i<numberOfMenuItems; i++){
       if(i == activeMenuItem)
-        drawRectangle(0, i*characterHeight, SCREEN_WIDTH, characterHeight, selectedItemColor);
+        drawRectangle(0, i*CHARACTER_HEIGHT, SCREEN_WIDTH, CHARACTER_HEIGHT, selectedItemColor);
       else
-        drawRectangle(0, i*characterHeight, SCREEN_WIDTH, characterHeight, 0x00);
+        drawRectangle(0, i*CHARACTER_HEIGHT, SCREEN_WIDTH, CHARACTER_HEIGHT, 0x00);
     }
 
-    *(DMA_Control+1) = (unsigned int) (frame);
-    *(DMA_Control+0) = 0; 
+    char* menuItems[] = {"PLAYER VS PLAYER", "PLAYER VS CPU", "EXIT"};
+    
+    //for(int i = 0; i<strlen(menuItems[1]); i++)
+    //  drawCharacter(10 + i*CHARACTER_WIDTH, 0, menuItems[1][i], 0xFF);
+    for(int i = 0; i<numberOfMenuItems; i++)
+      drawMenuItem(menuItems[i], i);
+    
+    frameBuffer();
   }
 
+  
 
+
+  /**
+   * Handles the main game loop
+   */
   void runGameLoop(){
   
 
@@ -319,8 +362,8 @@ clearBackBufferMenu( ){
       frame[i] = 0x00;
     }
 
-    int score1 = 0;
-    int score2 = 0;
+    score1 = 0;
+    score2 = 0;
 
     int blankDisplay = -1;
     for(int i = 0; i<6; i++){
@@ -353,7 +396,7 @@ clearBackBufferMenu( ){
 
         paddleCollision(&paddle2, &ball);
         
-        draw(&paddle1, &paddle2, &ball);
+        drawMovingElements(&paddle1, &paddle2, &ball);
 
         nextFrame = 0;
       }
@@ -367,14 +410,41 @@ clearBackBufferMenu( ){
     SCREEN_WIDTH = *(DMA_Control + 2) & 0xFFFF; 
     SCREEN_HEIGHT = (*(DMA_Control + 2) >> 16) & 0xFFFF;
 
+    gameState = MENU;
+
     int activeMenuItem = 0;
-    while(inMenu){
-  
-      drawMenu(activeMenuItem);
+    int prevSwitch = 0;
+    while(gameState == MENU){
+
+      int switchInput = get_sw();
+      int currentSwitch = switchInput & 0x1;
+      
+      if(currentSwitch && !prevSwitch){
+        activeMenuItem = (activeMenuItem + 1) % 3;
+      }
+      prevSwitch = currentSwitch;
+
+      int btnInput = get_btn();
+      if(btnInput){
+        if(activeMenuItem == 0){
+          gameState = PVP;
+        }
+        else if(activeMenuItem == 1){
+          gameState = PVC;
+        }
+        else if(activeMenuItem == 2){
+          return 0;
+        }
+      }
+
+      if(nextFrame){
+        drawMenu(activeMenuItem);
+        nextFrame = 0;
+      }
     }
     
-
-    runGameLoop();
+    if(gameState == PVP || gameState == PVC)
+      runGameLoop();
 }
 
 
