@@ -36,6 +36,7 @@ volatile int* DMA_Control = (volatile int *) 0x4000100;
 unsigned short SCREEN_WIDTH;
 unsigned short SCREEN_HEIGHT;
 bool running = true;
+bool inMenu = true;
 volatile char nextFrame = 1;
 
 typedef struct{
@@ -245,6 +246,21 @@ void draw(paddle* paddle1, paddle* paddle2, ball* ball1){
    }
   }
 
+  void drawMenu(int activeMenuItem){
+    //int activeMenuItem = 0;
+    int menuTextHeight = 8;
+    int numberOfMenuItems = 3;
+    char selectedItemColor = 0xFF;
+    //char* menuItems[3] = {"PLAYER VS CPU", "PLAYER VS PLAYER", "Exit"};
+    for(int i = 0; i<numberOfMenuItems; i++){
+      if(i == activeMenuItem)
+        drawRectangle(0, i*menuTextHeight, SCREEN_WIDTH, menuTextHeight, selectedItemColor);
+      else
+        drawRectangle(0, i*menuTextHeight, SCREEN_WIDTH, menuTextHeight, 0x00);
+    }
+    
+  }
+
 
   void runGameLoop(){
     SCREEN_WIDTH = *(DMA_Control + 2) & 0xFFFF; 
@@ -319,6 +335,14 @@ void draw(paddle* paddle1, paddle* paddle2, ball* ball1){
  int main ( void ) {
 
     labinit();
+
+    int activeMenuItem = 0;
+    while(inMenu){
+  
+      drawMenu(activeMenuItem);
+    }
+    
+
     runGameLoop();
 }
 
