@@ -173,6 +173,8 @@ void draw(paddle* paddle1, paddle* paddle2, ball* ball1){
 
 }
 
+
+
   void input(paddle* paddle1, paddle* paddle2){
 
       int switchInput = get_sw();
@@ -243,11 +245,7 @@ void draw(paddle* paddle1, paddle* paddle2, ball* ball1){
   }
 
 
-  /* Your code goes into main as well as any needed functions. */
- int main ( void ) {
-
-    labinit();
-
+  void runGameLoop(){
     SCREEN_WIDTH = *(DMA_Control + 2) & 0xFFFF; 
     SCREEN_HEIGHT = (*(DMA_Control + 2) >> 16) & 0xFFFF;
 
@@ -312,12 +310,15 @@ void draw(paddle* paddle1, paddle* paddle2, ball* ball1){
       draw(&paddle1, &paddle2, &ball);
 
       nextFrame = 0;
-
+      }
     }
-
   }
 
+  /* Your code goes into main as well as any needed functions. */
+ int main ( void ) {
 
+    labinit();
+    runGameLoop();
 }
 
 
