@@ -96,11 +96,12 @@ void set_display(int display_number, int value){
 
   switch(value){
 
-    case -2:
-     *displayAddress = 0xF9;
-     break;
+    //case -2:
+    //    *displayAddress = 0xF9;
+    //    break;
     case -1: 
-        *displayAddress = 0xCF;
+        //*displayAddress = 0xCF;
+        *displayAddress = 0xFF;
         break;
     case 0:
         *displayAddress = 0x40;
@@ -249,7 +250,6 @@ void draw(paddle* paddle1, paddle* paddle2, ball* ball1){
     SCREEN_WIDTH = *(DMA_Control + 2) & 0xFFFF; 
     SCREEN_HEIGHT = (*(DMA_Control + 2) >> 16) & 0xFFFF;
 
-
     paddle paddle1;
     paddle1.width = SCREEN_WIDTH/PADDLE_RELATIVE_WIDTH;
     paddle1.height = SCREEN_HEIGHT/PADDLE_RELATIVE_HEIGHT;
@@ -277,13 +277,14 @@ void draw(paddle* paddle1, paddle* paddle2, ball* ball1){
     int score1 = 0;
     int score2 = 0;
 
+    int blankDisplay = -1;
     for(int i = 0; i<6; i++){
       if(i == 3)
-          set_display(i,-2);
+        set_display(i, blankDisplay);
       else if(i == 2)
-          set_display(i,-1);
+        set_display(i, blankDisplay);
       else
-      set_display(i,0);
+        set_display(i,0);
     }
 
     set_leds(0x303);
@@ -293,23 +294,23 @@ void draw(paddle* paddle1, paddle* paddle2, ball* ball1){
 
       if(nextFrame){
 
-      clearBackBuffer(&paddle1, &paddle2, &ball);
-  
-      input(&paddle1, &paddle2);
+        clearBackBuffer(&paddle1, &paddle2, &ball);
+    
+        input(&paddle1, &paddle2);
 
-      paddleMovement(&paddle1);
+        paddleMovement(&paddle1);
 
-      paddleMovement(&paddle2);
+        paddleMovement(&paddle2);
 
-      ballMovement(&ball, &score1, &score2);
+        ballMovement(&ball, &score1, &score2);
 
-      paddleCollision(&paddle1, &ball);
+        paddleCollision(&paddle1, &ball);
 
-      paddleCollision(&paddle2, &ball);
-      
-      draw(&paddle1, &paddle2, &ball);
+        paddleCollision(&paddle2, &ball);
+        
+        draw(&paddle1, &paddle2, &ball);
 
-      nextFrame = 0;
+        nextFrame = 0;
       }
     }
   }
