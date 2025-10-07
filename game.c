@@ -2,7 +2,10 @@
 #include "globals.h"
 #include "util.h"
 
-void clearFrame(Paddle* paddle1, Paddle* paddle2, Ball* ball){
+/**
+ * Clears the frame of the moving elements
+ */
+void clearMovingElements(Paddle* paddle1, Paddle* paddle2, Ball* ball){
     drawRectangle(paddle1->x, paddle1->y, paddle1->width, paddle1->height, 0x00);
     drawRectangle(paddle2->x, paddle2->y, paddle2->width, paddle2->height, 0x00);
     drawRectangle(ball->x, ball->y, ball->width, ball->height, 0x00);
@@ -11,6 +14,8 @@ void clearFrame(Paddle* paddle1, Paddle* paddle2, Ball* ball){
     drawCharacter(SCREEN_WIDTH/2 + CHARACTER_WIDTH, 10, score2 + '0', 0x00);
 
 }
+
+
 
 void drawMovingElements(Paddle* paddle1, Paddle* paddle2, Ball* ball){
 
@@ -23,7 +28,6 @@ void drawMovingElements(Paddle* paddle1, Paddle* paddle2, Ball* ball){
     drawCharacter(SCREEN_WIDTH/2 + CHARACTER_WIDTH, 10, score2 + '0', 0xFF);
 
     frameBuffer();
-
 }
 
 
@@ -37,29 +41,29 @@ void drawMovingElements(Paddle* paddle1, Paddle* paddle2, Ball* ball){
         paddle1->down = switchInput & 0x100; 
 
         if(gameState == PVP){
-
-        paddle2->up = switchInput & 0x2;
-
-        paddle2->down = switchInput & 0x1;
+          paddle2->up = switchInput & 0x2;
+          paddle2->down = switchInput & 0x1;
         }
 
        else{
         int deadZone = 15;
-        paddle2->up = ((paddle2->y + paddle2->height/2) - (ball->y + ball->height/2)) > deadZone;
-        paddle2->down = (ball->y + ball->height/2) - (paddle2->y + paddle2->height/2 ) > deadZone;
+        int ballDistance = SCREEN_WIDTH/2;
+        
+        
+        paddle2->up = (((paddle2->y + paddle2->height/2) - (ball->y + ball->height/2)) > deadZone) 
+        && (paddle2->x - (ball->x + ball->width))< ballDistance;
+        paddle2->down = ((ball->y + ball->height/2) - (paddle2->y + paddle2->height/2 ) > deadZone)
+         && (paddle2->x - (ball->x + ball->width))< ballDistance;
        }
   }
 
 
   void paddleMovement(Paddle * paddle1){
-
     if(paddle1->up && paddle1->y > 0)
       paddle1->y -= PADDLE_MOVEMENT_SPEED;
     
     if(paddle1->down && (paddle1->y + paddle1->height) < SCREEN_HEIGHT)
         paddle1->y += PADDLE_MOVEMENT_SPEED;
-    
-
   }
 
  void resetBall(Ball* ball){
@@ -69,22 +73,31 @@ void drawMovingElements(Paddle* paddle1, Paddle* paddle2, Ball* ball){
     ball->movX = -ball->movX;
   }
 
-  void ballMovement(Ball* ball, int * score1, int * score2){
+
+  void pointScored(Ball * ball, int* score){
+      resetBall(ball);
+      (*score)++;
+      if(score == &score1)
+        set_display(4, score1);
+      else
+         set_display(0, score2);
+        
+      if(*score == MAX_SCORE){
+        score1 = 0;
+        score2 = 0;
+        gameState = MENU;
+      }
+  }
+
+
+  void ballMovement(Ball* ball){
 
     if(ball->x <= 0){
-      resetBall(ball);
-      (*score2)++;
-      set_display(0,*score2);
-      if(*score2 == MAX_SCORE)
-        running = false;
+      pointScored(ball, &score2);
     }
 
     else if (ball->x + ball->width >= SCREEN_WIDTH){
-      resetBall(ball);
-       (*score1)++;
-      set_display(4,*score1);
-      if(*score1 == MAX_SCORE)
-        running = false;
+      pointScored(ball, &score1);
     }
 
      
@@ -94,6 +107,11 @@ void drawMovingElements(Paddle* paddle1, Paddle* paddle2, Ball* ball){
       ball->y += ball->movY;
       ball->x += ball->movX;
 
+  }
+
+  void resetGame(){
+    score1 = 0;
+    score2 = 0;
   }
 
   
@@ -137,9 +155,7 @@ void drawMovingElements(Paddle* paddle1, Paddle* paddle2, Ball* ball){
     ball.movY = BALL_MOVEMENT_SPEED;
     ball.movX = 1;
 
-    for(int i = 0; i<SCREEN_HEIGHT*SCREEN_WIDTH; i++){
-      frame[i] = 0x00;
-    }
+    clearBuffer();
 
 
     int blankDisplay = -1;
@@ -154,12 +170,10 @@ void drawMovingElements(Paddle* paddle1, Paddle* paddle2, Ball* ball){
 
     set_leds(0x303);
 
-    //game loop
-    while(running){
-
+    while(gameState == PVP || gameState == PVC){
       if(nextFrame){
 
-        clearFrame(&paddle1, &paddle2, &ball);
+        clearMovingElements(&paddle1, &paddle2, &ball);
     
         input(&paddle1, &paddle2, &ball);
 
@@ -167,7 +181,7 @@ void drawMovingElements(Paddle* paddle1, Paddle* paddle2, Ball* ball){
 
         paddleMovement(&paddle2);
         
-        ballMovement(&ball, &score1, &score2);
+        ballMovement(&ball);
 
         paddleCollision(&paddle1, &ball);
 

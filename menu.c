@@ -2,6 +2,46 @@
 #include "globals.h"
 #include "util.h"
 
+
+void menuInteraction(){
+    int playerVsPlayer = 0;
+    int playerVsCPU = 1;
+    int exit = 2;
+    int activeMenuItem = playerVsPlayer;
+    int prevSwitch = 0;
+    while(gameState == MENU){
+      if(nextFrame){
+      nextFrame = 0;
+      int switchInput = get_sw();
+      int currentSwitch = switchInput & 0x1;
+      
+      if(currentSwitch && !prevSwitch){
+        activeMenuItem = (activeMenuItem + 1) % 3;
+        
+      }
+      prevSwitch = currentSwitch;
+
+      int btnInput = get_btn();
+      if(btnInput){
+        if(activeMenuItem == playerVsPlayer){
+          gameState = PVP;
+        }
+        else if(activeMenuItem == playerVsCPU){
+          gameState = PVC;
+        }
+        else if(activeMenuItem == exit){
+          //return 0;
+        }
+      }
+
+      //if(nextFrame){
+        drawMenu(activeMenuItem);
+        //nextFrame = 0;
+      //}
+    }
+  }
+}
+
 void drawMenuItem(char* item, int position){
     int i = 0;
     while(item[i] != 0){
@@ -14,9 +54,8 @@ void drawMenuItem(char* item, int position){
  * Draws the menu on the screen
  */
 void drawMenu(int activeMenuItem){
-    //clearBackBufferMenu();
-    //int characterHeight = 8;
-    //int characterWidth = 8;
+    
+    set_leds(1);
     int numberOfMenuItems = 3;
     char selectedItemColor = 0xE0;
     

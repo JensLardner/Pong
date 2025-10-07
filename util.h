@@ -1,6 +1,17 @@
 #ifndef UTIL_H
 #define UTIL_H
 
+
+extern void print(const char*);
+extern void print_dec(unsigned int);
+extern void display_string(char*);
+extern void time2string(char*,int);
+extern void tick(int*);
+extern void delay(int);
+extern int nextprime( int );
+extern void enable_interrupt();
+void set_display(int, int);
+
 extern void enable_interrupt();
 
 void handle_interrupt(unsigned cause);
@@ -15,11 +26,15 @@ int get_sw();
 
 int get_btn();
 
+void clearMovingElements();
+
 void drawCharacter(int x, int y, char character, char color );
 
 void drawRectangle(int x, int y, int width, int height, char color);
 
 void frameBuffer();
+
+void clearBuffer();
 
 
 #endif 

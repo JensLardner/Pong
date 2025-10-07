@@ -2,8 +2,6 @@
 #include "globals.h"
 #include "bitmaps.h"
 
-
-
 void handle_interrupt(unsigned cause) 
 {
   volatile unsigned short* Timeout_Status = (volatile unsigned short*) 0x04000020;
@@ -111,6 +109,15 @@ void drawRectangle(int x, int y, int width, int height, char color){
       }
 }
 
+
+/**
+ * Clears the entire frame buffer
+ */
+void clearBuffer(){
+  for(int i = 0; i<SCREEN_HEIGHT * SCREEN_WIDTH; i++){
+    frame[i] = 0;
+  }
+}
 
 void frameBuffer(){
     *(DMA_Control+1) = (unsigned int) (frame);

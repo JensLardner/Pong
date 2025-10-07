@@ -31,7 +31,7 @@ typedef struct{
   int movY;
 }Ball;
 
-void clearFrame(Paddle* paddle1, Paddle* paddle2, Ball* ball);
+void clearMovingElements(Paddle* paddle1, Paddle* paddle2, Ball* ball);
 
 void input(Paddle* paddle1, Paddle* paddle2, Ball* ball);
 
@@ -39,12 +39,13 @@ void paddleMovement(Paddle * paddle1);
 
 void resetBall(Ball* ball);
 
-void ballMovement(Ball* ball, int * score1, int * score2);
-
+void ballMovement(Ball* ball);
 
 void paddleCollision(Paddle* paddle1, Ball* ball);
 
 
 void runGameLoop();
+
+void resetGame();
 
 #endif 

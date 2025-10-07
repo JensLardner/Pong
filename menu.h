@@ -1,6 +1,8 @@
 #ifndef MENY_H
 #define MENY_H
 
+void menuInteraction();
+
 void drawMenuItem(char* item, int position);
   
 void drawMenu(int activeMenuItem);

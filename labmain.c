@@ -11,15 +11,8 @@
 #include "menu.h"
 #include "game.h"
 
-extern void print(const char*);
-extern void print_dec(unsigned int);
-extern void display_string(char*);
-extern void time2string(char*,int);
-extern void tick(int*);
-extern void delay(int);
-extern int nextprime( int );
-extern void enable_interrupt();
-void set_display(int, int);
+
+
 
 
   /* Your code goes into main as well as any needed functions. */
@@ -31,40 +24,19 @@ void set_display(int, int);
 
     gameState = MENU;
 
-    int activeMenuItem = 0;
-    int prevSwitch = 0;
-    while(gameState == MENU){
-
-      int switchInput = get_sw();
-      int currentSwitch = switchInput & 0x1;
-      
-      if(currentSwitch && !prevSwitch){
-        activeMenuItem = (activeMenuItem + 1) % 3;
+    while(1){
+      if(gameState == MENU){
+        clearBuffer();
+        menuInteraction();
       }
-      prevSwitch = currentSwitch;
-
-      int btnInput = get_btn();
-      if(btnInput){
-        if(activeMenuItem == 0){
-          gameState = PVP;
-        }
-        else if(activeMenuItem == 1){
-          gameState = PVC;
-        }
-        else if(activeMenuItem == 2){
-          return 0;
-        }
-      }
-
-      if(nextFrame){
-        drawMenu(activeMenuItem);
-        nextFrame = 0;
-      }
+    
+      if(gameState == PVP || gameState == PVC)
+        runGameLoop();
     }
     
-    if(gameState == PVP || gameState == PVC)
-      runGameLoop();
 }
+
+
 
 
 
