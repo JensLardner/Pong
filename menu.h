@@ -7,4 +7,6 @@ void drawMenuItem(char* item, int position);
   
 void drawMenu(int activeMenuItem);
 
+void drawWinner(char* winner, int length);
+
 #endif

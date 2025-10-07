@@ -15,7 +15,7 @@ extern unsigned short SCREEN_HEIGHT;
 extern bool running;
 extern bool inMenu;
 
-typedef enum{MENU, PVP, PVC}GameState;
+typedef enum{MENU, PVP, PVC, WINNER_SCREEN}GameState;
 
 extern GameState gameState;
 

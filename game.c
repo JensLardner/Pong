@@ -10,68 +10,73 @@ void clearMovingElements(Paddle* paddle1, Paddle* paddle2, Ball* ball){
     drawRectangle(paddle2->x, paddle2->y, paddle2->width, paddle2->height, 0x00);
     drawRectangle(ball->x, ball->y, ball->width, ball->height, 0x00);
 
-    drawCharacter(SCREEN_WIDTH/2 - CHARACTER_WIDTH, 10, score1 + '0', 0x00);
-    drawCharacter(SCREEN_WIDTH/2 + CHARACTER_WIDTH, 10, score2 + '0', 0x00);
+    drawCharacter(SCREEN_WIDTH/2 - CHARACTER_WIDTH, 10, score1 + '0', 0x00, false);
+    drawCharacter(SCREEN_WIDTH/2 + CHARACTER_WIDTH, 10, score2 + '0', 0x00, false);
 
 }
 
-
-
+/**
+ * Draws the moving elements on the screen
+ */
 void drawMovingElements(Paddle* paddle1, Paddle* paddle2, Ball* ball){
 
     drawRectangle(paddle1->x, paddle1->y, paddle1->width, paddle1->height, 0xFF);
     drawRectangle(paddle2->x, paddle2->y, paddle2->width, paddle2->height, 0xFF);
     drawRectangle(ball->x, ball->y, ball->width, ball->height, 0xFF);
 
-    drawCharacter(SCREEN_WIDTH/2 - CHARACTER_WIDTH, 10, score1 + '0', 0xFF);
-    drawCharacter(SCREEN_WIDTH/2, 10,':', 0xFF);
-    drawCharacter(SCREEN_WIDTH/2 + CHARACTER_WIDTH, 10, score2 + '0', 0xFF);
+    drawCharacter(SCREEN_WIDTH/2 - CHARACTER_WIDTH, 10, score1 + '0', 0xFF, false);
+    drawCharacter(SCREEN_WIDTH/2, 10,':', 0xFF,false);
+    drawCharacter(SCREEN_WIDTH/2 + CHARACTER_WIDTH, 10, score2 + '0', 0xFF, false);
 
     frameBuffer();
 }
 
 
+/**
+ * Enables input with the game
+ */
+void input(Paddle* paddle1, Paddle* paddle2, Ball* ball){
+  int switchInput = get_sw();
 
- void input(Paddle* paddle1, Paddle* paddle2, Ball* ball){
-  
-      int switchInput = get_sw();
-     
-        paddle1->up = switchInput & 0x200;
+  paddle1->up = switchInput & 0x200;
 
-        paddle1->down = switchInput & 0x100; 
+  paddle1->down = switchInput & 0x100; 
 
-        if(gameState == PVP){
-          paddle2->up = switchInput & 0x2;
-          paddle2->down = switchInput & 0x1;
-        }
-
-       else{
-        int deadZone = 15;
-        int ballDistance = SCREEN_WIDTH/2;
-        
-        
-        paddle2->up = (((paddle2->y + paddle2->height/2) - (ball->y + ball->height/2)) > deadZone) 
-        && (paddle2->x - (ball->x + ball->width))< ballDistance;
-        paddle2->down = ((ball->y + ball->height/2) - (paddle2->y + paddle2->height/2 ) > deadZone)
-         && (paddle2->x - (ball->x + ball->width))< ballDistance;
-       }
+  if(gameState == PVP){
+    paddle2->up = switchInput & 0x2;
+    paddle2->down = switchInput & 0x1;
   }
-
-
-  void paddleMovement(Paddle * paddle1){
-    if(paddle1->up && paddle1->y > 0)
-      paddle1->y -= PADDLE_MOVEMENT_SPEED;
+  else{
+    int deadZone = 15;
+    int ballDistance = SCREEN_WIDTH/2;
     
-    if(paddle1->down && (paddle1->y + paddle1->height) < SCREEN_HEIGHT)
-        paddle1->y += PADDLE_MOVEMENT_SPEED;
+    paddle2->up = (((paddle2->y + paddle2->height/2) - (ball->y + ball->height/2)) > deadZone) 
+    && (paddle2->x - (ball->x + ball->width))< ballDistance;
+    paddle2->down = ((ball->y + ball->height/2) - (paddle2->y + paddle2->height/2 ) > deadZone)
+      && (paddle2->x - (ball->x + ball->width))< ballDistance;
   }
+}
 
- void resetBall(Ball* ball){
-    ball->x = SCREEN_WIDTH/2 - ball->width/2;
-    ball->y = SCREEN_HEIGHT/2 - ball->height/2;
-    ball->movY = -ball->movY;
-    ball->movX = -ball->movX;
-  }
+
+/**
+ * Handles the movement of a paddle
+ */
+void paddleMovement(Paddle * paddle1){
+  if(paddle1->up && paddle1->y > 0)
+    paddle1->y -= PADDLE_MOVEMENT_SPEED;
+  
+  if(paddle1->down && (paddle1->y + paddle1->height) < SCREEN_HEIGHT)
+      paddle1->y += PADDLE_MOVEMENT_SPEED;
+}
+/**
+ * Resets the ball to the center of the screen
+ */
+void resetBall(Ball* ball){
+  ball->x = SCREEN_WIDTH/2 - ball->width/2;
+  ball->y = SCREEN_HEIGHT/2 - ball->height/2;
+  ball->movY = -ball->movY;
+  ball->movX = -ball->movX;
+}
 
 
   void pointScored(Ball * ball, int* score){
@@ -83,9 +88,10 @@ void drawMovingElements(Paddle* paddle1, Paddle* paddle2, Ball* ball){
          set_display(0, score2);
         
       if(*score == MAX_SCORE){
-        score1 = 0;
-        score2 = 0;
-        gameState = MENU;
+        // score1 = 0;
+        // score2 = 0;
+        gameState = WINNER_SCREEN;
+        //gameState = MENU;
       }
   }
 
@@ -133,7 +139,8 @@ void drawMovingElements(Paddle* paddle1, Paddle* paddle2, Ball* ball){
    * Handles the main game loop
    */
   void runGameLoop(){
-  
+    score1 = 0;
+    score2 = 0;
 
     Paddle paddle1;
     paddle1.width = SCREEN_WIDTH/PADDLE_RELATIVE_WIDTH;

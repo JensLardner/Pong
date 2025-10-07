@@ -90,16 +90,21 @@ int get_btn(){
   return *address & 0x1;
   }
 
-void drawCharacter(int x, int y, char character, char color ){
- for(int bitmapRow = 0; bitmapRow < 8; bitmapRow++){
-        char pixels = font8x8_basic[(int)character][bitmapRow];
-        for(int bitmapColumn = 0; bitmapColumn<8; bitmapColumn++){
-           if (pixels & (0x1 << bitmapColumn)) {
-           frame[(y + bitmapRow) * SCREEN_WIDTH + x + bitmapColumn] = color;
+
+void drawCharacter(int x, int y, char character, char color, bool scaleBy2){
+  int scale = scaleBy2 +1;
+
+ for(int bitmapRow = 0; bitmapRow < CHARACTER_HEIGHT*scale; bitmapRow++){
+        char pixels = font8x8_basic[(int)character][(int)bitmapRow/scale];
+        for(int bitmapColumn = 0; bitmapColumn<CHARACTER_WIDTH * scale; bitmapColumn++){
+           if (pixels & (0x1 << ((int)bitmapColumn/scale)) ) {
+            frame[(y + bitmapRow) * SCREEN_WIDTH + x + bitmapColumn] = color;
            }
         }
       }
 }
+
+
 
 void drawRectangle(int x, int y, int width, int height, char color){
       for(int i = y; i < y + height; i++){
@@ -122,4 +127,11 @@ void clearBuffer(){
 void frameBuffer(){
     *(DMA_Control+1) = (unsigned int) (frame);
     *(DMA_Control+0) = 0; 
+}
+
+int stringLength(char* str){
+  int length = 0;
+  while(str[length] != 0)
+    length++;
+  return length;
 }

@@ -26,14 +26,19 @@
 
     while(1){
       if(gameState == MENU){
-        clearBuffer();
+        //clearBuffer();
         menuInteraction();
       }
     
       if(gameState == PVP || gameState == PVC)
         runGameLoop();
-    }
-    
+
+      if(gameState == WINNER_SCREEN ){
+        clearBuffer();
+        char* winnerText = score1 > score2 ? "PLAYER 1 WINS!" : "PLAYER 2 WINS!";
+        drawWinner(winnerText, stringLength(winnerText));
+      }
+  }
 }
 
 

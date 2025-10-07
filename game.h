@@ -3,7 +3,7 @@
 
 #include "stdbool.h"
 
-#define MAX_SCORE 9
+#define MAX_SCORE 1
 
 #define PADDLE_X_OFFSET 10
 #define PADDLE_RELATIVE_HEIGHT 5

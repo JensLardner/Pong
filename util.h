@@ -1,6 +1,7 @@
 #ifndef UTIL_H
 #define UTIL_H
 
+#include <stdbool.h>
 
 extern void print(const char*);
 extern void print_dec(unsigned int);
@@ -28,7 +29,7 @@ int get_btn();
 
 void clearMovingElements();
 
-void drawCharacter(int x, int y, char character, char color );
+void drawCharacter(int x, int y, char character, char color, bool scale );
 
 void drawRectangle(int x, int y, int width, int height, char color);
 
@@ -36,5 +37,6 @@ void frameBuffer();
 
 void clearBuffer();
 
+int stringLength(char* str);
 
 #endif 
