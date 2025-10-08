@@ -2,6 +2,8 @@
 #include "globals.h"
 #include "util.h"
 
+#include <stdlib.h>
+
 /**
  * Clears the frame of the moving elements
  */
@@ -49,11 +51,19 @@ void input(Paddle* paddle1, Paddle* paddle2, Ball* ball){
   else{
     int deadZone = 15;
     int ballDistance = SCREEN_WIDTH/2;
-    
-    paddle2->up = (((paddle2->y + paddle2->height/2) - (ball->y + ball->height/2)) > deadZone) 
-    && (paddle2->x - (ball->x + ball->width))< ballDistance;
-    paddle2->down = ((ball->y + ball->height/2) - (paddle2->y + paddle2->height/2 ) > deadZone)
+
+    // int missChance = rand() % 100;
+
+    // if(missChance < 10){
+    //   paddle2->up = 0;
+    //   paddle2->down = 0;
+    // }
+    // else{
+      paddle2->up = (((paddle2->y + paddle2->height/2) - (ball->y + ball->height/2)) > deadZone) 
       && (paddle2->x - (ball->x + ball->width))< ballDistance;
+      paddle2->down = ((ball->y + ball->height/2) - (paddle2->y + paddle2->height/2 ) > deadZone)
+      && (paddle2->x - (ball->x + ball->width))< ballDistance;
+    // }
   }
 }
 
@@ -154,6 +164,15 @@ void setPaddle(Paddle* paddle, bool isLeftPaddle){
   paddle->y = SCREEN_HEIGHT/2 - paddle->height/2;
 }
 
+void setBall(Ball* ball){
+  ball->height = 4;
+  ball->width = 4;
+  ball->x = SCREEN_WIDTH/2 - ball->width/2;
+  ball->y = SCREEN_HEIGHT/2 - ball->height/2;
+  ball->movY = BALL_MOVEMENT_SPEED;
+  ball->movX = 1;
+}
+
 /**
  * Handles the main game loop
  */
@@ -163,28 +182,12 @@ void runGameLoop(){
   Paddle paddle1;
   Paddle paddle2;
 
-  setPaddle(&paddle1, true);
-  setPaddle(&paddle2, false);
-
-  // Paddle paddle1;
-  // paddle1.width = SCREEN_WIDTH/PADDLE_RELATIVE_WIDTH;
-  // paddle1.height = SCREEN_HEIGHT/PADDLE_RELATIVE_HEIGHT;
-  // paddle1.x = PADDLE_X_OFFSET;
-  // paddle1.y = SCREEN_HEIGHT/2 - paddle1.height/2;
-
-  // Paddle paddle2;
-  // paddle2.width = SCREEN_WIDTH/PADDLE_RELATIVE_WIDTH;
-  // paddle2.height = SCREEN_HEIGHT/PADDLE_RELATIVE_HEIGHT;
-  // paddle2.x = SCREEN_WIDTH - paddle2.width - PADDLE_X_OFFSET;
-  // paddle2.y = SCREEN_HEIGHT/2 - paddle2.height/2;
-
+  bool isLeftPaddle = true;
+  bool isRightPaddle = false;
+  setPaddle(&paddle1, isLeftPaddle);
+  setPaddle(&paddle2, isRightPaddle);
   Ball ball;
-  ball.height = 4;
-  ball.width = 4;
-  ball.x = SCREEN_WIDTH/2 - ball.width/2;
-  ball.y = SCREEN_HEIGHT/2 - ball.height/2;
-  ball.movY = BALL_MOVEMENT_SPEED;
-  ball.movX = 1;
+  setBall(&ball);
 
   clearBuffer();
 

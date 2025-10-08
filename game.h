@@ -43,9 +43,12 @@ void ballMovement(Ball* ball);
 
 void paddleCollision(Paddle* paddle1, Ball* ball);
 
-
 void runGameLoop();
 
 void resetScores();
+
+void setPaddle(Paddle* paddle, bool isLeftPaddle);
+
+void setBall(Ball* ball);
 
 #endif 

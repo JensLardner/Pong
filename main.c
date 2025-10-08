@@ -15,10 +15,11 @@
 
 
 
-  /* Your code goes into main as well as any needed functions. */
+
+    /*ur code goes into main as well as any needed functions. */
  int main ( void ) {
 
-    labinit();
+    init();
     SCREEN_WIDTH = *(DMA_Control + 2) & 0xFFFF; 
     SCREEN_HEIGHT = (*(DMA_Control + 2) >> 16) & 0xFFFF;
 
@@ -26,7 +27,6 @@
 
     while(1){
       if(gameState == MENU){
-        //clearBuffer();
         menuInteraction();
       }
     

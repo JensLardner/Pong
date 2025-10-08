@@ -99,7 +99,8 @@ void drawWinner(char* winner, int stringLength){
     drawCharacter(x+CHARACTER_WIDTH*2*i, SCREEN_HEIGHT/2 - CHARACTER_HEIGHT ,winner[i], 0xE0, scaleBy2);
     i++;
   }
-  delay(10000);
+  
+  delay(5000);
   clearBuffer();
   gameState = MENU;
 }

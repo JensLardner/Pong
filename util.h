@@ -11,13 +11,14 @@ extern void tick(int*);
 extern void delay(int);
 extern int nextprime( int );
 extern void enable_interrupt();
+extern void reset_counters(unsigned int*);
+extern void read_counters(unsigned int*);
 void set_display(int, int);
 
-extern void enable_interrupt();
 
 void handle_interrupt(unsigned cause);
 
-void labinit(void);
+void init(void);
 
 void set_leds(int led_mask);
 

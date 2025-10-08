@@ -2,6 +2,9 @@
 #include "globals.h"
 #include "bitmaps.h"
 
+/*
+* The function called in the case of an external interrupt
+*/
 void handle_interrupt(unsigned cause) 
 {
   volatile unsigned short* Timeout_Status = (volatile unsigned short*) 0x04000020;
@@ -9,8 +12,8 @@ void handle_interrupt(unsigned cause)
   nextFrame = 1;
 }
 
-/* Add your code here for initializing interrupts. */
-void labinit(void)
+/* Initializes interrupts. */
+void init(void)
 {
   volatile unsigned short*  Period_Low = (unsigned short *) 0x04000028;
 
@@ -28,21 +31,21 @@ void labinit(void)
 
 }
 
+
+/* Sets the leds with a bit mask*/
 void set_leds(int led_mask){
   volatile int* p = (volatile int*)0x04000000;
   *p = led_mask & 0x3FF;
 }
 
+
+/* Sets a value on the 7-segment display*/
 void set_display(int display_number, int value){
   volatile int* displayAddress = (volatile int*)(0x04000050 + 0x10 * display_number);
 
   switch(value){
 
-    //case -2:
-    //    *displayAddress = 0xF9;
-    //    break;
-    case -1: 
-        //*displayAddress = 0xCF;
+    case -1:
         *displayAddress = 0xFF;
         break;
     case 0:
@@ -80,17 +83,29 @@ void set_display(int display_number, int value){
   }
 }
 
+
+/*
+* Returns the value of the 10 LSB in the memory mapped IO for the switches
+*/
 int get_sw(){
   volatile int* address = (volatile int*) 0x04000010;
   return *address & 0x3FF;
 }
 
+
+/*
+* Returns the value of the LSB in the memory mapped IO for the button
+*/
 int get_btn(){
  volatile int* address = (volatile int*) 0x040000d0;
   return *address & 0x1;
   }
 
 
+
+/*
+* draws a character fromt the bitmap in bitmaps.h, scale can be set to 1 or 2
+*/
 void drawCharacter(int x, int y, char character, char color, bool scaleBy2){
   int scale = scaleBy2 +1;
 
@@ -106,6 +121,9 @@ void drawCharacter(int x, int y, char character, char color, bool scaleBy2){
 
 
 
+/*
+* Draws a rectangle
+ */
 void drawRectangle(int x, int y, int width, int height, char color){
       for(int i = y; i < y + height; i++){
         for(int j = x; j< x + width; j++){
@@ -129,6 +147,11 @@ void frameBuffer(){
     *(DMA_Control+0) = 0; 
 }
 
+
+
+/**
+ * Calculates the length of a string
+ */
 int stringLength(char* str){
   int length = 0;
   while(str[length] != 0)
