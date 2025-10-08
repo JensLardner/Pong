@@ -132,50 +132,62 @@ enable_interrupt:
         jr ra
         
 reset_counters:
-    csrw mcycle, x0
-    csrw minstret, x0
-	  csrr t0, mhpmcounter4
-    sw   t0, 8(a0)
-
-    csrr t0, mhpmcounter5
-    sw   t0, 12(a0)
-
-    csrr t0, mhpmcounter6
-    sw   t0, 16(a0)
-
-    csrr t0, mhpmcounter7
-    sw   t0, 20(a0)
-
-    csrr t0, mhpmcounter8
-    sw   t0, 24(a0)
-
-    csrr t0, mhpmcounter9
-    sw   t0, 28(a0)
-    jr ra
-    
-    
-    read_counters:
     csrr t0, mcycle
+    csrr t1, mcycleh
     sw   t0, 0(a0)
+    sw   t1, 4(a0)
 
     csrr t0, minstret
-    sw   t0, 4(a0)
+    csrr t1, minstreth
+    sw   t0, 8(a0)
+    sw   t1, 12(a0)
 
     csrr t0, mhpmcounter4
-    sw   t0, 8(a0)
-
-    csrr t0, mhpmcounter5
-    sw   t0, 12(a0)
-
-    csrr t0, mhpmcounter6
     sw   t0, 16(a0)
 
-    csrr t0, mhpmcounter7
+    csrr t0, mhpmcounter5
     sw   t0, 20(a0)
 
-    csrr t0, mhpmcounter8
+    csrr t0, mhpmcounter6
     sw   t0, 24(a0)
 
-    csrr t0, mhpmcounter9
+    csrr t0, mhpmcounter7
     sw   t0, 28(a0)
+
+    csrr t0, mhpmcounter8
+    sw   t0, 32(a0)
+
+    csrr t0, mhpmcounter9
+    sw   t0, 36(a0)
+    jr ra
+
+
+read_counters:
+    csrr t0, mcycle
+    csrr t1, mcycleh
+    sw   t0, 0(a0)
+    sw   t1, 4(a0)
+
+    csrr t0, minstret
+    csrr t1, minstreth
+    sw   t0, 8(a0)
+    sw   t1, 12(a0)
+
+    csrr t0, mhpmcounter4
+    sw   t0, 16(a0)
+
+    csrr t0, mhpmcounter5
+    sw   t0, 20(a0)
+
+    csrr t0, mhpmcounter6
+    sw   t0, 24(a0)
+
+    csrr t0, mhpmcounter7
+    sw   t0, 28(a0)
+
+    csrr t0, mhpmcounter8
+    sw   t0, 32(a0)
+
+    csrr t0, mhpmcounter9
+    sw   t0, 36(a0)
     jr ra
