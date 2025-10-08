@@ -77,8 +77,10 @@ void drawMenu(int activeMenuItem){
  * Draws the winner text on the screen
  */
 void drawWinner(char* winner, int stringLength){
-  int i = 0;
+  
   bool scaleBy2 = true;
+  
+  int i = 0;
   while(winner[i] != 0){
     int x = SCREEN_WIDTH/2 - (CHARACTER_WIDTH * stringLength);
     drawCharacter(x+CHARACTER_WIDTH*2*i, SCREEN_HEIGHT/2 - CHARACTER_HEIGHT ,winner[i], 0xE0, scaleBy2);
@@ -88,4 +90,6 @@ void drawWinner(char* winner, int stringLength){
   clearBuffer();
   gameState = MENU;
 }
+
+
 
