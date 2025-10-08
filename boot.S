@@ -4,7 +4,7 @@ welcome_msg: .asciz "================================================\n===== RIS
 	
 .section .text
 .align 2
-.globl _start, enable_interrupt
+.globl _start, enable_interrupt, reset_counters, read_counters
 	
 _isr_handler:
 	j _isr_routine	   /* ISR service routine here */
@@ -130,3 +130,42 @@ enable_interrupt:
 	csrsi mie,16
         csrsi mstatus,3   
         jr ra
+        
+reset_counters:
+    csrw mcycle, x0
+    csrw minstret, x0
+    csrw mhpmcounter3, x0
+    csrw mhpmcounter4, x0
+    csrw mhpmcounter5, x0
+    csrw mhpmcounter6, x0
+    csrw mhpmcounter7, x0
+    csrw mhpmcounter8, x0
+    csrw mhpmcounter9, x0
+    jr ra
+    
+    
+    read_counters:
+    csrr t0, mcycle
+    sw   t0, 0(a0)
+
+    csrr t0, minstret
+    sw   t0, 4(a0)
+
+    csrr t0, mhpmcounter4
+    sw   t0, 8(a0)
+
+    csrr t0, mhpmcounter5
+    sw   t0, 12(a0)
+
+    csrr t0, mhpmcounter6
+    sw   t0, 16(a0)
+
+    csrr t0, mhpmcounter7
+    sw   t0, 20(a0)
+
+    csrr t0, mhpmcounter8
+    sw   t0, 24(a0)
+
+    csrr t0, mhpmcounter9
+    sw   t0, 28(a0)
+    jr ra

@@ -11,9 +11,10 @@ extern void tick(int*);
 extern void delay(int);
 extern int nextprime( int );
 extern void enable_interrupt();
+extern void reset_counters();
+extern void read_counters(unsigned int*);
 void set_display(int, int);
 
-extern void enable_interrupt();
 
 void handle_interrupt(unsigned cause);
 

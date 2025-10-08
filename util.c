@@ -2,6 +2,8 @@
 #include "globals.h"
 #include "bitmaps.h"
 
+
+
 void handle_interrupt(unsigned cause) 
 {
   volatile unsigned short* Timeout_Status = (volatile unsigned short*) 0x04000020;

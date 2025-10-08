@@ -177,8 +177,12 @@ void resetBall(Ball* ball){
 
     set_leds(0x303);
 
+    unsigned int counters[8];
+
     while(gameState == PVP || gameState == PVC){
       if(nextFrame){
+
+       reset_counters();
 
         clearMovingElements(&paddle1, &paddle2, &ball);
     
@@ -197,6 +201,13 @@ void resetBall(Ball* ball){
         drawMovingElements(&paddle1, &paddle2, &ball);
 
         nextFrame = 0;
+
+        read_counters(counters);
+
+        for(int i = 0; i<8; i++){
+          print_dec(counters[i]);
+        }
+        break;
       }
     }
   }
