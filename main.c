@@ -4,19 +4,14 @@
 
    For copyright and licensing, see file COPYING */
 
-
-/* Below functions are external and found in other files. */
 #include "globals.h"
 #include "util.h"
 #include "menu.h"
 #include "game.h"
 
-
-
-
-
-
-    /*ur code goes into main as well as any needed functions. */
+/*
+* The main function
+*/
  int main ( void ) {
 
     init();
