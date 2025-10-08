@@ -9,4 +9,8 @@ void drawMenu(int activeMenuItem);
 
 void drawWinner(char* winner, int length);
 
+void handleMenuSelection();
+
+void updateMenuSelection();
+
 #endif

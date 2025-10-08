@@ -46,6 +46,6 @@ void paddleCollision(Paddle* paddle1, Ball* ball);
 
 void runGameLoop();
 
-void resetGame();
+void resetScores();
 
 #endif 

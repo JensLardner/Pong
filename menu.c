@@ -2,38 +2,51 @@
 #include "globals.h"
 #include "util.h"
 
+#define PLAYER_VS_PLAYER 0
+#define PLAYER_VS_CPU 1
+
+static int activeMenuItem = PLAYER_VS_PLAYER;
+static int prevSwitch = 0;
+
+
 /**
  * Handles the interaction in the menu
  */
-void menuInteraction(){
-  int playerVsPlayer = 0;
-  int playerVsCPU = 1;
-  int activeMenuItem = playerVsPlayer;
-
-  int prevSwitch = 0;
+void menuInteraction(){  
   while(gameState == MENU){
     if(nextFrame){
       nextFrame = 0;
-      int switchInput = get_sw();
-      int currentSwitch = switchInput & 0x1;
-      
-      if(currentSwitch && !prevSwitch){
-        activeMenuItem = (activeMenuItem + 1) % 2;
-        
-      }
-      prevSwitch = currentSwitch;
-
-      int btnInput = get_btn();
-      if(btnInput){
-        if(activeMenuItem == playerVsPlayer){
-          gameState = PVP;
-        }
-        else if(activeMenuItem == playerVsCPU){
-          gameState = PVC;
-        }
-      }
-
+      updateMenuSelection();
+      handleMenuSelection();
       drawMenu(activeMenuItem);
+    }
+  }
+}
+
+/**
+ * Updates the active menu item
+ */
+void updateMenuSelection(){
+  int switchInput = get_sw();
+  int currentSwitch = switchInput & 0x1;
+
+  if(currentSwitch && !prevSwitch){
+    activeMenuItem = (activeMenuItem + 1) % 2;
+  }
+  prevSwitch = currentSwitch;
+}
+
+/**
+ * Handles the selection of a menu item
+ */
+void handleMenuSelection(){
+  int btnInput = get_btn();
+  if(btnInput){
+    if(activeMenuItem == PLAYER_VS_PLAYER){
+      gameState = PVP;
+    }
+    else if(activeMenuItem == PLAYER_VS_CPU){
+      gameState = PVC;
     }
   }
 }
@@ -79,7 +92,7 @@ void drawMenu(int activeMenuItem){
 void drawWinner(char* winner, int stringLength){
   
   bool scaleBy2 = true;
-  
+
   int i = 0;
   while(winner[i] != 0){
     int x = SCREEN_WIDTH/2 - (CHARACTER_WIDTH * stringLength);

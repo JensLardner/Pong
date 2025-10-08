@@ -36,9 +36,11 @@ void drawMovingElements(Paddle* paddle1, Paddle* paddle2, Ball* ball){
 void input(Paddle* paddle1, Paddle* paddle2, Ball* ball){
   int switchInput = get_sw();
 
-  paddle1->up = switchInput & 0x200;
+  int leftmostSwitch = switchInput & 0x100;
+  int secondLeftmostSwitch = switchInput & 0x200;
 
-  paddle1->down = switchInput & 0x100; 
+  paddle1->up = leftmostSwitch;
+  paddle1->down = secondLeftmostSwitch; 
 
   if(gameState == PVP){
     paddle2->up = switchInput & 0x2;
@@ -115,7 +117,10 @@ void ballMovement(Ball* ball){
 
 }
 
-void resetGame(){
+/**
+ * Resets information in the game
+ */
+void resetScores(){
   score1 = 0;
   score2 = 0;
 }
@@ -137,24 +142,41 @@ void paddleCollision(Paddle* paddle1, Ball* ball){
   }
 }
 
+void resetPaddlePosition(Paddle paddle, bool isLeftPaddle){
+  paddle.width = SCREEN_WIDTH/PADDLE_RELATIVE_WIDTH;
+  paddle.height = SCREEN_HEIGHT/PADDLE_RELATIVE_HEIGHT;
+  if(isLeftPaddle){
+    paddle.x = PADDLE_X_OFFSET;
+  }
+  else{
+    SCREEN_WIDTH - paddle.width - PADDLE_X_OFFSET;
+  }
+  paddle.y = SCREEN_HEIGHT/2 - paddle.height/2;
+}
+
 /**
  * Handles the main game loop
  */
 void runGameLoop(){
-  score1 = 0;
-  score2 = 0;
+  resetScores();
 
   Paddle paddle1;
-  paddle1.width = SCREEN_WIDTH/PADDLE_RELATIVE_WIDTH;
-  paddle1.height = SCREEN_HEIGHT/PADDLE_RELATIVE_HEIGHT;
-  paddle1.x = PADDLE_X_OFFSET;
-  paddle1.y = SCREEN_HEIGHT/2 - paddle1.height/2;
-
   Paddle paddle2;
-  paddle2.width = SCREEN_WIDTH/PADDLE_RELATIVE_WIDTH;
-  paddle2.height = SCREEN_HEIGHT/PADDLE_RELATIVE_HEIGHT;
-  paddle2.x = SCREEN_WIDTH - paddle2.width - PADDLE_X_OFFSET;
-  paddle2.y = SCREEN_HEIGHT/2 - paddle2.height/2;
+
+  resetPaddlePosition(paddle1, true);
+  resetPaddlePosition(paddle2, false);
+
+  // Paddle paddle1;
+  // paddle1.width = SCREEN_WIDTH/PADDLE_RELATIVE_WIDTH;
+  // paddle1.height = SCREEN_HEIGHT/PADDLE_RELATIVE_HEIGHT;
+  // paddle1.x = PADDLE_X_OFFSET;
+  // paddle1.y = SCREEN_HEIGHT/2 - paddle1.height/2;
+
+  // Paddle paddle2;
+  // paddle2.width = SCREEN_WIDTH/PADDLE_RELATIVE_WIDTH;
+  // paddle2.height = SCREEN_HEIGHT/PADDLE_RELATIVE_HEIGHT;
+  // paddle2.x = SCREEN_WIDTH - paddle2.width - PADDLE_X_OFFSET;
+  // paddle2.y = SCREEN_HEIGHT/2 - paddle2.height/2;
 
   Ball ball;
   ball.height = 4;
@@ -165,7 +187,6 @@ void runGameLoop(){
   ball.movX = 1;
 
   clearBuffer();
-
 
   int blankDisplay = -1;
   for(int i = 0; i<6; i++){
