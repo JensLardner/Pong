@@ -142,23 +142,26 @@ reset_counters:
     sw   t0, 8(a0)
     sw   t1, 12(a0)
 
-    csrr t0, mhpmcounter4
+    csrr t0, mhpmcounter3
     sw   t0, 16(a0)
 
-    csrr t0, mhpmcounter5
+    csrr t0, mhpmcounter4
     sw   t0, 20(a0)
 
-    csrr t0, mhpmcounter6
+    csrr t0, mhpmcounter5
     sw   t0, 24(a0)
 
-    csrr t0, mhpmcounter7
+    csrr t0, mhpmcounter6
     sw   t0, 28(a0)
 
-    csrr t0, mhpmcounter8
+    csrr t0, mhpmcounter7
     sw   t0, 32(a0)
 
-    csrr t0, mhpmcounter9
+    csrr t0, mhpmcounter8
     sw   t0, 36(a0)
+
+    csrr t0, mhpmcounter9
+    sw   t0, 40(a0)
     jr ra
 
 
@@ -173,21 +176,24 @@ read_counters:
     sw   t0, 8(a0)
     sw   t1, 12(a0)
 
-    csrr t0, mhpmcounter4
+    csrr t0, mhpmcounter3
     sw   t0, 16(a0)
 
-    csrr t0, mhpmcounter5
+    csrr t0, mhpmcounter4
     sw   t0, 20(a0)
 
-    csrr t0, mhpmcounter6
+    csrr t0, mhpmcounter5
     sw   t0, 24(a0)
 
-    csrr t0, mhpmcounter7
+    csrr t0, mhpmcounter6
     sw   t0, 28(a0)
 
-    csrr t0, mhpmcounter8
+    csrr t0, mhpmcounter7
     sw   t0, 32(a0)
 
-    csrr t0, mhpmcounter9
+    csrr t0, mhpmcounter8
     sw   t0, 36(a0)
+
+    csrr t0, mhpmcounter9
+    sw   t0, 40(a0)
     jr ra

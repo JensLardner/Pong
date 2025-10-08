@@ -180,8 +180,8 @@ void resetBall(Ball* ball){
 
     set_leds(0x303);
 
-     unsigned int begin[10];
-    unsigned int counters[10];
+     unsigned int begin[11];
+    unsigned int counters[11];
 
     while(gameState == PVP || gameState == PVC){
       if(nextFrame){
@@ -210,7 +210,7 @@ void resetBall(Ball* ball){
 
         if(prints){
           prints = false;
-        for(int i = 0; i<10; i++){
+        for(int i = 0; i<11; i++){
           print_dec(counters[i] - begin[i]);
           print("\n");
         }
