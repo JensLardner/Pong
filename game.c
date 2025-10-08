@@ -142,16 +142,16 @@ void paddleCollision(Paddle* paddle1, Ball* ball){
   }
 }
 
-void resetPaddlePosition(Paddle paddle, bool isLeftPaddle){
-  paddle.width = SCREEN_WIDTH/PADDLE_RELATIVE_WIDTH;
-  paddle.height = SCREEN_HEIGHT/PADDLE_RELATIVE_HEIGHT;
+void setPaddle(Paddle* paddle, bool isLeftPaddle){
+  paddle->width = SCREEN_WIDTH/PADDLE_RELATIVE_WIDTH;
+  paddle->height = SCREEN_HEIGHT/PADDLE_RELATIVE_HEIGHT;
   if(isLeftPaddle){
-    paddle.x = PADDLE_X_OFFSET;
+    paddle->x = PADDLE_X_OFFSET;
   }
   else{
-    SCREEN_WIDTH - paddle.width - PADDLE_X_OFFSET;
+    paddle->x = SCREEN_WIDTH - paddle->width - PADDLE_X_OFFSET;
   }
-  paddle.y = SCREEN_HEIGHT/2 - paddle.height/2;
+  paddle->y = SCREEN_HEIGHT/2 - paddle->height/2;
 }
 
 /**
@@ -163,8 +163,8 @@ void runGameLoop(){
   Paddle paddle1;
   Paddle paddle2;
 
-  resetPaddlePosition(paddle1, true);
-  resetPaddlePosition(paddle2, false);
+  setPaddle(&paddle1, true);
+  setPaddle(&paddle2, false);
 
   // Paddle paddle1;
   // paddle1.width = SCREEN_WIDTH/PADDLE_RELATIVE_WIDTH;
