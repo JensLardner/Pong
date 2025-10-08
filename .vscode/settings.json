@@ -3,6 +3,7 @@
     "files.associations": {
         "menu.h": "c",
         "globals.h": "c",
-        "stdbool.h": "c"
+        "stdbool.h": "c",
+        "util.h": "c"
     }
 }

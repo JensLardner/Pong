@@ -2,6 +2,9 @@
 #include "globals.h"
 #include "util.h"
 
+
+  bool prints = true;
+
 /**
  * Clears the frame of the moving elements
  */
@@ -177,12 +180,13 @@ void resetBall(Ball* ball){
 
     set_leds(0x303);
 
+     unsigned int begin[8];
     unsigned int counters[8];
 
     while(gameState == PVP || gameState == PVC){
       if(nextFrame){
 
-       reset_counters();
+       reset_counters(begin);
 
         clearMovingElements(&paddle1, &paddle2, &ball);
     
@@ -204,9 +208,14 @@ void resetBall(Ball* ball){
 
         read_counters(counters);
 
+        if(prints){
+          prints = false;
         for(int i = 0; i<8; i++){
-          print_dec(counters[i]);
+          print_dec(counters[i] - begin[i]);
+          print("\n");
         }
+         }
+        
         break;
       }
     }

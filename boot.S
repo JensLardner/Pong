@@ -134,13 +134,23 @@ enable_interrupt:
 reset_counters:
     csrw mcycle, x0
     csrw minstret, x0
-    csrw mhpmcounter3, x0
-    csrw mhpmcounter4, x0
-    csrw mhpmcounter5, x0
-    csrw mhpmcounter6, x0
-    csrw mhpmcounter7, x0
-    csrw mhpmcounter8, x0
-    csrw mhpmcounter9, x0
+	  csrr t0, mhpmcounter4
+    sw   t0, 8(a0)
+
+    csrr t0, mhpmcounter5
+    sw   t0, 12(a0)
+
+    csrr t0, mhpmcounter6
+    sw   t0, 16(a0)
+
+    csrr t0, mhpmcounter7
+    sw   t0, 20(a0)
+
+    csrr t0, mhpmcounter8
+    sw   t0, 24(a0)
+
+    csrr t0, mhpmcounter9
+    sw   t0, 28(a0)
     jr ra
     
     
