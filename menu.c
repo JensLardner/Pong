@@ -15,7 +15,7 @@ void menuInteraction()
 {
   clearBuffer();
   frameBuffer();
-  
+
   while (gameState == MENU)
   {
     if (nextFrame)
@@ -118,7 +118,8 @@ void drawWinner(char *winner, int stringLength)
     i++;
   }
 
-  delay(5000);
+  int millisecondsToShowWinner = 3000;
+  delay(millisecondsToShowWinner);
   clearBuffer();
   gameState = MENU;
 }

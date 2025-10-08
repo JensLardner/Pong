@@ -3,7 +3,7 @@
 
 #include "stdbool.h"
 
-#define MAX_SCORE 1
+#define MAX_SCORE 9
 
 #define PADDLE_X_OFFSET 10
 #define PADDLE_RELATIVE_HEIGHT 5
@@ -30,6 +30,10 @@ typedef struct{
   int movX;
   int movY;
 }Ball;
+
+void drawScore(char color);
+
+void drawPaddlesAndBalls(Paddle *paddle1, Paddle *paddle2, Ball *ball, char color);
 
 void clearMovingElements(Paddle* paddle1, Paddle* paddle2, Ball* ball);
 

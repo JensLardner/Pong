@@ -3,16 +3,31 @@
 #include "util.h"
 
 /**
+ * Draws the paddles and ball with a specified color
+ */
+void drawPaddlesAndBalls(Paddle *paddle1, Paddle *paddle2, Ball *ball, char color){
+  drawRectangle(paddle1->x, paddle1->y, paddle1->width, paddle1->height, color);
+  drawRectangle(paddle2->x, paddle2->y, paddle2->width, paddle2->height, color);
+  drawRectangle(ball->x, ball->y, ball->width, ball->height,color);
+}
+
+/**
+ * Draws the score on the screen
+ */
+void drawScore(char color){
+  drawCharacter(SCREEN_WIDTH / 2 - CHARACTER_WIDTH, 10, score1 + '0', color, false);
+  drawCharacter(SCREEN_WIDTH / 2 + CHARACTER_WIDTH, 10, score2 + '0', color, false);
+
+}
+
+/**
  * Clears the frame of the moving elements
  */
 void clearMovingElements(Paddle *paddle1, Paddle *paddle2, Ball *ball)
 {
-  drawRectangle(paddle1->x, paddle1->y, paddle1->width, paddle1->height, 0x00);
-  drawRectangle(paddle2->x, paddle2->y, paddle2->width, paddle2->height, 0x00);
-  drawRectangle(ball->x, ball->y, ball->width, ball->height, 0x00);
-
-  drawCharacter(SCREEN_WIDTH / 2 - CHARACTER_WIDTH, 10, score1 + '0', 0x00, false);
-  drawCharacter(SCREEN_WIDTH / 2 + CHARACTER_WIDTH, 10, score2 + '0', 0x00, false);
+  char black = 0x00;
+  drawPaddlesAndBalls(paddle1, paddle2, ball, black);
+  drawScore(black);
 }
 
 /**
@@ -20,14 +35,11 @@ void clearMovingElements(Paddle *paddle1, Paddle *paddle2, Ball *ball)
  */
 void drawMovingElements(Paddle *paddle1, Paddle *paddle2, Ball *ball)
 {
+  drawPaddlesAndBalls(paddle1, paddle2, ball, 0xFF);
 
-  drawRectangle(paddle1->x, paddle1->y, paddle1->width, paddle1->height, 0xFF);
-  drawRectangle(paddle2->x, paddle2->y, paddle2->width, paddle2->height, 0xFF);
-  drawRectangle(ball->x, ball->y, ball->width, ball->height, 0xFF);
-
-  drawCharacter(SCREEN_WIDTH / 2 - CHARACTER_WIDTH, 10, score1 + '0', 0xFF, false);
+  char white = 0xFF;
+  drawScore(white);
   drawCharacter(SCREEN_WIDTH / 2, 10, ':', 0xFF, false);
-  drawCharacter(SCREEN_WIDTH / 2 + CHARACTER_WIDTH, 10, score2 + '0', 0xFF, false);
 
   frameBuffer();
 }
@@ -50,23 +62,16 @@ void input(Paddle *paddle1, Paddle *paddle2, Ball *ball)
     paddle2->up = switchInput & 0x2;
     paddle2->down = switchInput & 0x1;
   }
-  else
+  else //PVC
   {
-    int deadZone = 30;
-    int ballDistance = SCREEN_WIDTH / 2;
+    int deadZone = 20;
+    int ballDistance = SCREEN_WIDTH / 2 - 65;
 
-    // int missChance = rand() % 100;
+    paddle2->up = (((paddle2->y + paddle2->height / 2) - (ball->y + ball->height / 2)) > deadZone)
+      && (paddle2->x - (ball->x + ball->width)) < ballDistance;
 
-    // if (missChance < 10)
-    // {
-    //   paddle2->up = 0;
-    //   paddle2->down = 0;
-    // }
-    // else
-    // {
-      paddle2->up = (((paddle2->y + paddle2->height / 2) - (ball->y + ball->height / 2)) > deadZone) && (paddle2->x - (ball->x + ball->width)) < ballDistance;
-      paddle2->down = ((ball->y + ball->height / 2) - (paddle2->y + paddle2->height / 2) > deadZone) && (paddle2->x - (ball->x + ball->width)) < ballDistance;
-    //}
+    paddle2->down = ((ball->y + ball->height / 2) - (paddle2->y + paddle2->height / 2) > deadZone) 
+    && (paddle2->x - (ball->x + ball->width)) < ballDistance;
   }
 }
 
@@ -116,7 +121,6 @@ void pointScored(Ball *ball, int *score)
  */
 void ballMovement(Ball *ball)
 {
-
   if (ball->x <= 0)
   {
     pointScored(ball, &score2);
@@ -227,7 +231,6 @@ void runGameLoop()
   {
     if (nextFrame)
     {
-
       clearMovingElements(&paddle1, &paddle2, &ball);
 
       input(&paddle1, &paddle2, &ball);

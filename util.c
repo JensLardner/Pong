@@ -28,10 +28,6 @@ void init(void)
   *Control = 0x7;
 
   enable_interrupt();
-
-  // clearBuffer();
-
-  // frameBuffer();
 }
 
 /* Sets the leds with a bit mask*/
@@ -48,42 +44,41 @@ void set_display(int display_number, int value)
 
   switch (value)
   {
-
-  case -1:
-    *displayAddress = 0xFF;
-    break;
-  case 0:
-    *displayAddress = 0x40;
-    break;
-  case 1:
-    *displayAddress = 0x79;
-    break;
-  case 2:
-    *displayAddress = 0x24;
-    break;
-  case 3:
-    *displayAddress = 0x30;
-    break;
-  case 4:
-    *displayAddress = 0x19;
-    break;
-  case 5:
-    *displayAddress = 0x12;
-    break;
-  case 6:
-    *displayAddress = 0x02;
-    break;
-  case 7:
-    *displayAddress = 0x78;
-    break;
-  case 8:
-    *displayAddress = 0x00;
-    break;
-  case 9:
-    *displayAddress = 0x10;
-    return;
-  default:
-    return;
+    case -1:
+      *displayAddress = 0xFF;
+      break;
+    case 0:
+      *displayAddress = 0x40;
+      break;
+    case 1:
+      *displayAddress = 0x79;
+      break;
+    case 2:
+      *displayAddress = 0x24;
+      break;
+    case 3:
+      *displayAddress = 0x30;
+      break;
+    case 4:
+      *displayAddress = 0x19;
+      break;
+    case 5:
+      *displayAddress = 0x12;
+      break;
+    case 6:
+      *displayAddress = 0x02;
+      break;
+    case 7:
+      *displayAddress = 0x78;
+      break;
+    case 8:
+      *displayAddress = 0x00;
+      break;
+    case 9:
+      *displayAddress = 0x10;
+      return;
+    default:
+      return;
   }
 }
 
