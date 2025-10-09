@@ -36,10 +36,12 @@ void clearMovingElements(Paddle *paddle1, Paddle *paddle2, Ball *ball)
 void drawMovingElements(Paddle *paddle1, Paddle *paddle2, Ball *ball)
 {
   char white = 0xFF;
+  bool scaleBy2 = false;
+
   drawPaddlesAndBalls(paddle1, paddle2, ball, white);
 
   drawScore(white);
-  drawCharacter(SCREEN_WIDTH / 2, 10, ':', 0xFF, white);
+  drawCharacter(SCREEN_WIDTH / 2, 10, ':', white, scaleBy2);
 
   frameBuffer();
 }
@@ -81,11 +83,6 @@ void input(Paddle *paddle1, Paddle *paddle2, Ball *ball)
 
     paddle2->down = ballBelow && ballClose;
 
-    // paddle2->up = (((paddle2->y + paddle2->height / 2) - (ball->y + ball->height / 2)) > deadZone)
-    //   && (paddle2->x - (ball->x + ball->width)) < ballDistance;
-
-    // paddle2->down = ((ball->y + ball->height / 2) - (paddle2->y + paddle2->height / 2) > deadZone) 
-    // && (paddle2->x - (ball->x + ball->width)) < ballDistance;
   }
 }
 
