@@ -151,8 +151,8 @@ void clearBuffer()
 //Frame Buffer stores pixel data (color values)
 void frameBuffer()
 {
-  *(DMA_Control + 1) = (unsigned int)(frame);
-  *(DMA_Control + 0) = 0;
+  //*(DMA_Control + 1) = (unsigned int)(frame);
+  *(DMA_Control + 0) = 0; //writing to dma control makes it read values from the frame buffer
 }
 
 /** Tahmid
