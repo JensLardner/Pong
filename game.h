@@ -12,7 +12,6 @@
 
 #define BALL_MOVEMENT_SPEED 1
 
-
 typedef struct{
   short x;
   int y;

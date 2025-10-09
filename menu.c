@@ -94,7 +94,7 @@ void drawMenu(int activeMenuItem)
       drawRectangle(0, i * CHARACTER_HEIGHT, SCREEN_WIDTH, CHARACTER_HEIGHT, 0x00);
   }
 
-  char *menuItems[] = {"PLAYER VS PLAYER", "PLAYER VS CPU"};
+  char* menuItems[] = {"PLAYER VS PLAYER", "PLAYER VS CPU"};
 
   for (int i = 0; i < numberOfMenuItems; i++)
     drawMenuItem(menuItems[i], i);
