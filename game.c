@@ -2,7 +2,7 @@
 #include "globals.h"
 #include "util.h"
 
-/**
+/** Jens
  * Draws the paddles and ball with a specified color
  */
 void drawPaddlesAndBalls(Paddle *paddle1, Paddle *paddle2, Ball *ball, char color){
@@ -11,7 +11,7 @@ void drawPaddlesAndBalls(Paddle *paddle1, Paddle *paddle2, Ball *ball, char colo
   drawRectangle(ball->x, ball->y, ball->width, ball->height,color);
 }
 
-/**
+/** Jens
  * Draws the score on the screen
  */
 void drawScore(char color){
@@ -20,7 +20,7 @@ void drawScore(char color){
 
 }
 
-/**
+/** Tahmid
  * Clears the frame of the moving elements
  */
 void clearMovingElements(Paddle *paddle1, Paddle *paddle2, Ball *ball)
@@ -30,7 +30,7 @@ void clearMovingElements(Paddle *paddle1, Paddle *paddle2, Ball *ball)
   drawScore(black);
 }
 
-/**
+/** Jens & Tahmid
  * Draws the moving elements on the screen
  */
 void drawMovingElements(Paddle *paddle1, Paddle *paddle2, Ball *ball)
@@ -44,7 +44,7 @@ void drawMovingElements(Paddle *paddle1, Paddle *paddle2, Ball *ball)
   frameBuffer();
 }
 
-/**
+/** Jens & Tahmid
  * Enables input with the game
  */
 void input(Paddle *paddle1, Paddle *paddle2, Ball *ball)
@@ -75,7 +75,7 @@ void input(Paddle *paddle1, Paddle *paddle2, Ball *ball)
   }
 }
 
-/**
+/** Jens
  * Handles the movement of a paddle
  */
 void paddleMovement(Paddle *paddle1)
@@ -87,7 +87,7 @@ void paddleMovement(Paddle *paddle1)
     paddle1->y += PADDLE_MOVEMENT_SPEED;
 }
 
-/**
+/** Jens
  * Resets the ball to the center of the screen
  */
 void resetBall(Ball *ball)
@@ -98,7 +98,7 @@ void resetBall(Ball *ball)
   ball->movX = -ball->movX;
 }
 
-/**
+/** Jens & Tahmid
  * Handles when a point is scored
  */
 void pointScored(Ball *ball, int *score)
@@ -116,7 +116,7 @@ void pointScored(Ball *ball, int *score)
   }
 }
 
-/**
+/** Jens
  * Handles the movement of the ball
  */
 void ballMovement(Ball *ball)
@@ -139,7 +139,7 @@ void ballMovement(Ball *ball)
   ball->x += ball->movX;
 }
 
-/**
+/** Tahmid
  * Resets information in the game
  */
 void resetScores()
@@ -148,7 +148,7 @@ void resetScores()
   score2 = 0;
 }
 
-/**
+/** Jens
  * Handles the collision between a paddle and the ball
  */
 void paddleCollision(Paddle *paddle1, Ball *ball)
@@ -164,7 +164,7 @@ void paddleCollision(Paddle *paddle1, Ball *ball)
   }
 }
 
-/*
+/* Jens & Tahmid
  * Sets a paddle to it's inital position
  */
 void setPaddle(Paddle *paddle, bool isLeftPaddle)
@@ -182,7 +182,7 @@ void setPaddle(Paddle *paddle, bool isLeftPaddle)
   paddle->y = SCREEN_HEIGHT / 2 - paddle->height / 2;
 }
 
-/*
+/* Jens
  * Sets the balll to it's initial position
  */
 void setBall(Ball *ball)
@@ -195,7 +195,7 @@ void setBall(Ball *ball)
   ball->movX = 1;
 }
 
-/**
+/** Jens & Tahmid
  * Handles the main game loop
  */
 void runGameLoop()

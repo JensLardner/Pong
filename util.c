@@ -2,7 +2,7 @@
 #include "globals.h"
 #include "bitmaps.h"
 
-/*
+/* Jens
  * The function called in the case of an external interrupt
  */
 void handle_interrupt(unsigned cause)
@@ -11,7 +11,7 @@ void handle_interrupt(unsigned cause)
   *Timeout_Status = 0;
   nextFrame = 1;
 }
-
+//Jens & Tahmid
 /* Initializes interrupts and the timer. */
 void init(void)
 {
@@ -30,6 +30,7 @@ void init(void)
   enable_interrupt();
 }
 
+//Jens & Tahmid
 /* Sets the leds with a bit mask*/
 void set_leds(int led_mask)
 {
@@ -37,6 +38,7 @@ void set_leds(int led_mask)
   *p = led_mask & 0x3FF;
 }
 
+//Jens & Tahmid
 /* Sets a value on the 7-segment display*/
 void set_display(int display_number, int value)
 {
@@ -82,7 +84,7 @@ void set_display(int display_number, int value)
   }
 }
 
-/*
+/* Jens & Tahmid
  * Returns the value of the 10 LSB in the memory mapped IO for the switches
  */
 int get_sw()
@@ -91,7 +93,7 @@ int get_sw()
   return *address & 0x3FF;
 }
 
-/*
+/* Jens & Tahmid
  * Returns the value of the LSB in the memory mapped IO for the button
  */
 int get_btn()
@@ -100,7 +102,7 @@ int get_btn()
   return *address & 0x1;
 }
 
-/*
+/* Jens
  * draws a character fromt the bitmap in bitmaps.h, scale can be set to 1 or 2
  */
 void drawCharacter(int x, int y, char character, char color, bool scaleBy2)
@@ -120,7 +122,7 @@ void drawCharacter(int x, int y, char character, char color, bool scaleBy2)
   }
 }
 
-/*
+/* Jens
  * Draws a rectangle
  */
 void drawRectangle(int x, int y, int width, int height, char color)
@@ -134,8 +136,8 @@ void drawRectangle(int x, int y, int width, int height, char color)
   }
 }
 
-/**
- * Clears the entire frame buffer
+/** Jens
+ * Draws black to the entire frame buffer
  */
 void clearBuffer()
 {
@@ -145,13 +147,14 @@ void clearBuffer()
   }
 }
 
+//Jens
 void frameBuffer()
 {
   *(DMA_Control + 1) = (unsigned int)(frame);
   *(DMA_Control + 0) = 0;
 }
 
-/**
+/** Tahmid
  * Calculates the length of a string
  */
 int stringLength(char *str)

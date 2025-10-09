@@ -1,3 +1,4 @@
+//Jens
 #ifndef GLOBALS_H
 #define GLOBALS_H
 
@@ -11,9 +12,6 @@ extern volatile int* DMA_Control;
 
 extern unsigned short SCREEN_WIDTH;
 extern unsigned short SCREEN_HEIGHT;
-
-extern bool running;
-extern bool inMenu;
 
 typedef enum{MENU, PVP, PVC, WINNER_SCREEN}GameState;
 

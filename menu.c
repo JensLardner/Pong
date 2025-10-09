@@ -8,7 +8,7 @@
 static int activeMenuItem = PLAYER_VS_PLAYER;
 static int prevSwitch = 0;
 
-/**
+/** Tahmid
  * Handles the interaction in the menu
  */
 void menuInteraction()
@@ -28,7 +28,7 @@ void menuInteraction()
   }
 }
 
-/**
+/** Tahmid
  * Updates the active menu item
  */
 void updateMenuSelection()
@@ -43,7 +43,7 @@ void updateMenuSelection()
   prevSwitch = currentSwitch;
 }
 
-/**
+/** Tahmid
  * Handles the selection of a menu item
  */
 void handleMenuSelection()
@@ -62,7 +62,7 @@ void handleMenuSelection()
   }
 }
 
-/**
+/** Tahmid
  * Draws a single menu item on the screen
  */
 void drawMenuItem(char *item, int position)
@@ -76,7 +76,7 @@ void drawMenuItem(char *item, int position)
   }
 }
 
-/**
+/** Tahmid
  * Draws the menu on the screen
  */
 void drawMenu(int activeMenuItem)
@@ -101,8 +101,8 @@ void drawMenu(int activeMenuItem)
 
   frameBuffer();
 }
-
-/**
+ 
+/** Tahmid
  * Draws the winner text on the screen
  */
 void drawWinner(char *winner, int stringLength)

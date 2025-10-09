@@ -1,6 +1,6 @@
 /* main.c
 
-   This file written 2024 by Artur Podobas and Pedro Antunes
+   This file written 2024 by Jens Lardner and Tahmid Lasker
 
    For copyright and licensing, see file COPYING */
 
@@ -9,7 +9,7 @@
 #include "menu.h"
 #include "game.h"
 
-/*
+/* Jens & Tahmid
 * The main function
 */
  int main ( void ) {
