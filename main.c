@@ -1,6 +1,6 @@
 /* main.c
 
-   This file written 2024 by Jens Lardner and Tahmid Lasker
+   This file written 2025 by Jens Lardner and Tahmid Lasker
 
    For copyright and licensing, see file COPYING */
 

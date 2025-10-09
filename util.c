@@ -131,7 +131,7 @@ void drawRectangle(int x, int y, int width, int height, char color)
   {
     for (int j = x; j < x + width; j++)
     {
-      frame[i * SCREEN_WIDTH + j] = color;
+      frame[i * SCREEN_WIDTH + j] = color; //SCREEN_WIDTH is used to go to the next row
     }
   }
 }
@@ -148,6 +148,7 @@ void clearBuffer()
 }
 
 //Jens
+//Frame Buffer stores pixel data (color values)
 void frameBuffer()
 {
   *(DMA_Control + 1) = (unsigned int)(frame);

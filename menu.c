@@ -33,12 +33,15 @@ void menuInteraction()
  */
 void updateMenuSelection()
 {
+  int rightmostSwitch = 0x1;
+  int numberOfMenuItems = 2;
+
   int switchInput = get_sw();
-  int currentSwitch = switchInput & 0x1;
+  int currentSwitch = switchInput & rightmostSwitch;
 
   if (currentSwitch && !prevSwitch)
   {
-    activeMenuItem = (activeMenuItem + 1) % 2;
+    activeMenuItem = (activeMenuItem + 1) % numberOfMenuItems;
   }
   prevSwitch = currentSwitch;
 }
@@ -67,11 +70,14 @@ void handleMenuSelection()
  */
 void drawMenuItem(char *item, int position)
 {
-  int i = 0;
+  int nullTerminator = 0;
+  int white = 0xFF;
   bool scaleBy2 = false;
-  while (item[i] != 0)
+
+  int i = 0;
+  while (item[i] != nullTerminator) 
   {
-    drawCharacter(10 + i * CHARACTER_WIDTH, CHARACTER_HEIGHT * position, item[i], 0xFF, scaleBy2);
+    drawCharacter(10 + i * CHARACTER_WIDTH, CHARACTER_HEIGHT * position, item[i], white, scaleBy2);
     i++;
   }
 }
@@ -85,13 +91,14 @@ void drawMenu(int activeMenuItem)
   set_leds(rightmostLED);
   int numberOfMenuItems = 2;
   char selectedItemColor = 0xE0;
+  int black = 0x00;
 
   for (int i = 0; i < numberOfMenuItems; i++)
   {
     if (i == activeMenuItem)
       drawRectangle(0, i * CHARACTER_HEIGHT, SCREEN_WIDTH, CHARACTER_HEIGHT, selectedItemColor);
-    else
-      drawRectangle(0, i * CHARACTER_HEIGHT, SCREEN_WIDTH, CHARACTER_HEIGHT, 0x00);
+    else //not selected
+      drawRectangle(0, i * CHARACTER_HEIGHT, SCREEN_WIDTH, CHARACTER_HEIGHT, black);
   }
 
   char* menuItems[] = {"PLAYER VS PLAYER", "PLAYER VS CPU"};
@@ -102,19 +109,20 @@ void drawMenu(int activeMenuItem)
   frameBuffer();
 }
  
-/** Tahmid
+/** Jens & Tahmid 
  * Draws the winner text on the screen
  */
 void drawWinner(char *winner, int stringLength)
 {
-
+  int nullTerminator = 0;
+  int red = 0xE0;
   bool scaleBy2 = true;
-
+  
   int i = 0;
-  while (winner[i] != 0)
+  while (winner[i] != nullTerminator)
   {
     int x = SCREEN_WIDTH / 2 - (CHARACTER_WIDTH * stringLength);
-    drawCharacter(x + CHARACTER_WIDTH * 2 * i, SCREEN_HEIGHT / 2 - CHARACTER_HEIGHT, winner[i], 0xE0, scaleBy2);
+    drawCharacter(x + CHARACTER_WIDTH * 2 * i, SCREEN_HEIGHT / 2 - CHARACTER_HEIGHT, winner[i], red, scaleBy2);
     i++;
   }
 
