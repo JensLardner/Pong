@@ -2246,13 +2246,8 @@ Disassembly of section .data:
 	...
 
 000020f4 <nextFrame>:
-    20f4:	                	.insn	2, 0x0101
-
-000020f5 <inMenu>:
-    20f5:	                	.insn	2, 0x0101
-
-000020f6 <running>:
-    20f6:	0001                	.insn	2, 0x0001
+    20f4:	0001                	.insn	2, 0x0001
+	...
 
 000020f8 <DMA_Control>:
     20f8:	0100                	.insn	2, 0x0100
