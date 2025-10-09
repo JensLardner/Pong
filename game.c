@@ -136,13 +136,13 @@ void ballMovement(Ball *ball)
   {
     pointScored(ball, &score2);
   }
-
   else if (ball->x + ball->width >= SCREEN_WIDTH)
   {
     pointScored(ball, &score1);
   }
 
-  if (ball->y < 0 || (ball->y + ball->height) > SCREEN_HEIGHT)
+  bool ballHitsTopOrBottom = ball->y < 0 || (ball->y + ball->height) > SCREEN_HEIGHT;
+  if (ballHitsTopOrBottom)
   {
     ball->movY = -ball->movY;
   }
@@ -164,7 +164,20 @@ void resetScores()
  */
 void paddleCollision(Paddle *paddle1, Ball *ball)
 {
-  if (paddle1->y < (ball->y + ball->height) && ball->y < (paddle1->y + paddle1->height) && paddle1->x < (ball->x + ball->width) && ball->x < (paddle1->x + paddle1->width))
+  int paddle1Top = paddle1->y;
+  int paddle1Bottom = paddle1->y + paddle1->height;
+  int paddle1Left = paddle1->x;
+  int paddle1Right = paddle1->x + paddle1->width;
+
+  int ballTop = ball->y;
+  int ballBottom = ball->y + ball->height;
+  int ballLeft = ball->x;
+  int ballRight = ball->x + ball->width;
+
+  bool overlapInY = (paddle1Top < ballBottom) && (ballTop < paddle1Bottom);
+  bool overlapInX = (paddle1Left < ballRight) && (ballLeft < paddle1Right);
+
+  if (overlapInY && overlapInX)
   {
     ball->movX = -ball->movX;
 
@@ -173,6 +186,16 @@ void paddleCollision(Paddle *paddle1, Ball *ball)
     else
       ball->x -= ball->width;
   }
+
+  // if (paddle1->y < (ball->y + ball->height) && ball->y < (paddle1->y + paddle1->height) && paddle1->x < (ball->x + ball->width) && ball->x < (paddle1->x + paddle1->width))
+  // {
+  //   ball->movX = -ball->movX;
+
+  //   if (ball->x < SCREEN_WIDTH / 2)
+  //     ball->x += ball->width;
+  //   else
+  //     ball->x -= ball->width;
+  // }
 }
 
 /* Jens & Tahmid
@@ -186,7 +209,7 @@ void setPaddle(Paddle *paddle, bool isLeftPaddle)
   {
     paddle->x = PADDLE_X_OFFSET;
   }
-  else
+  else //right paddle
   {
     paddle->x = SCREEN_WIDTH - paddle->width - PADDLE_X_OFFSET;
   }
@@ -236,7 +259,8 @@ void runGameLoop()
       set_display(i, 0);
   }
 
-  set_leds(0x303);
+  int twoLeftAndTwoRightLEDS = 0x303;
+  set_leds(twoLeftAndTwoRightLEDS);
 
   while (gameState == PVP || gameState == PVC)
   {
