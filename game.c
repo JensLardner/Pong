@@ -15,9 +15,9 @@ void drawPaddlesAndBalls(Paddle *paddle1, Paddle *paddle2, Ball *ball, char colo
  * Draws the score on the screen
  */
 void drawScore(char color){
-  drawCharacter(SCREEN_WIDTH / 2 - CHARACTER_WIDTH, 10, score1 + '0', color, false);
-  drawCharacter(SCREEN_WIDTH / 2 + CHARACTER_WIDTH, 10, score2 + '0', color, false);
-
+  bool scaleBy2 = false;
+  drawCharacter(SCREEN_WIDTH / 2 - CHARACTER_WIDTH, 10, score1 + '0', color, scaleBy2);
+  drawCharacter(SCREEN_WIDTH / 2 + CHARACTER_WIDTH, 10, score2 + '0', color, scaleBy2);
 }
 
 /** Tahmid
@@ -35,11 +35,11 @@ void clearMovingElements(Paddle *paddle1, Paddle *paddle2, Ball *ball)
  */
 void drawMovingElements(Paddle *paddle1, Paddle *paddle2, Ball *ball)
 {
-  drawPaddlesAndBalls(paddle1, paddle2, ball, 0xFF);
-
   char white = 0xFF;
+  drawPaddlesAndBalls(paddle1, paddle2, ball, white);
+
   drawScore(white);
-  drawCharacter(SCREEN_WIDTH / 2, 10, ':', 0xFF, false);
+  drawCharacter(SCREEN_WIDTH / 2, 10, ':', 0xFF, white);
 
   frameBuffer();
 }
@@ -59,19 +59,33 @@ void input(Paddle *paddle1, Paddle *paddle2, Ball *ball)
 
   if (gameState == PVP)
   {
-    paddle2->up = switchInput & 0x2;
-    paddle2->down = switchInput & 0x1;
+    int secondRightmostSwitch = switchInput & 0x2;
+    int rightmostSwitch = switchInput & 0x1;
+    paddle2->up = secondRightmostSwitch;
+    paddle2->down = rightmostSwitch;
   }
   else //PVC
   {
     int deadZone = 20;
     int ballDistance = SCREEN_WIDTH / 2 - 65;
 
-    paddle2->up = (((paddle2->y + paddle2->height / 2) - (ball->y + ball->height / 2)) > deadZone)
-      && (paddle2->x - (ball->x + ball->width)) < ballDistance;
+    int paddle2Center = paddle2->y + paddle2->height / 2;
+    int ballCenter = ball->y + ball->height / 2;
+    int horizontalDistance = paddle2->x - (ball->x + ball->width);
 
-    paddle2->down = ((ball->y + ball->height / 2) - (paddle2->y + paddle2->height / 2) > deadZone) 
-    && (paddle2->x - (ball->x + ball->width)) < ballDistance;
+    bool ballAbove = (paddle2Center - ballCenter) > deadZone;
+    bool ballBelow = (ballCenter - paddle2Center) > deadZone;
+    bool ballClose = horizontalDistance < ballDistance;
+
+    paddle2->up = ballAbove && ballClose;
+
+    paddle2->down = ballBelow && ballClose;
+
+    // paddle2->up = (((paddle2->y + paddle2->height / 2) - (ball->y + ball->height / 2)) > deadZone)
+    //   && (paddle2->x - (ball->x + ball->width)) < ballDistance;
+
+    // paddle2->down = ((ball->y + ball->height / 2) - (paddle2->y + paddle2->height / 2) > deadZone) 
+    // && (paddle2->x - (ball->x + ball->width)) < ballDistance;
   }
 }
 
